@@ -3,7 +3,7 @@ import google.generativeai as genai
 
 # API Anahtarını buraya gir (Sadece tırnak içini değiştir)
 genai.configure(api_key="AQ.Ab8RN6KryPfvvAaZKjyMA_qGJMRwg7BzBxA6WHjPT_NCuaZ8Og")
-model = genai.GenerativeModel('gemini-pro')
+model = genai.GenerativeModel('gemini-1.5-flash')
 
 st.title("Dijital Evim")
 
