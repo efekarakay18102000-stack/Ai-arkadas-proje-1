@@ -2,7 +2,7 @@ import streamlit as st
 import google.generativeai as genai
 
 # API Anahtarını buraya gir (Sadece tırnak içini değiştir)
-genai.configure(api_key="BURAYA_API_KEY_KODUNU_YAPISTIR")
+genai.configure(api_key="AQ.Ab8RN6KryPfvvAaZKjyMA_qGJMRwg7BzBxA6WHjPT_NCuaZ8Og")
 model = genai.GenerativeModel('gemini-pro')
 
 st.title("Dijital Evim")
