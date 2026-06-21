@@ -19,11 +19,29 @@ for message in st.session_state.messages:
     with st.chat_message(message["role"]):
         st.markdown(message["content"])
 
+# ... (baş kısımlar aynı kalacak)
+
 # Kullanıcı girişi
 if prompt := st.chat_input("Arkadaşına bir şey söyle..."):
     st.session_state.messages.append({"role": "user", "content": prompt})
     with st.chat_message("user"):
         st.markdown(prompt)
+
+    # Gemini cevabı (Hata almamak için metin kontrolü ekliyoruz)
+    try:
+        response = model.generate_content(prompt)
+        # Cevabın boş olup olmadığını kontrol et
+        if response.text:
+            cevap = response.text
+        else:
+            cevap = "Üzgünüm, şu an bir cevap üretemiyorum."
+    except Exception as e:
+        cevap = f"Bir hata oluştu: {e}"
+    
+    with st.chat_message("assistant"):
+        st.markdown(cevap)
+    st.session_state.messages.append({"role": "assistant", "content": cevap})
+    
 
     # Gemini cevabı
     response = model.generate_content(prompt)
