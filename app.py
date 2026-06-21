@@ -1,8 +1,17 @@
 import streamlit as st
 import google.generativeai as genai
 
+# Anahtarı kodun içine yazmıyoruz, Streamlit'ten çekiyoruz!
+genai.configure(api_key=st.secrets["GOOGLE_API_KEY"])
+model = genai.GenerativeModel('gemini-1.5-flash')
+
+st.title("perryn")
+# ... (kodun devamı)
+import streamlit as st
+import google.generativeai as genai
+
 # API Anahtarını buraya gir (Sadece tırnak içini değiştir)
-genai.configure(api_key="AQ.Ab8RN6KryPfvvAaZKjyMA_qGJMRwg7BzBxA6WHjPT_NCuaZ8Og")
+genai.configure(api_key="")
 model = genai.GenerativeModel('gemini-1.5-flash')
 
 st.title("Dijital Evim")
