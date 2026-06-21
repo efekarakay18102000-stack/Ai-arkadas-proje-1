@@ -1,38 +1,54 @@
 import streamlit as st
 import google.generativeai as genai
 
-# Anahtarı doğrudan koda yazdık, secrets kullanmıyoruz
-genai.configure(api_key="AIzaSyAQ.Ab8RN6LlvUjpMlglsDV6OJf6oTGtysdJGA3JqsYKVeLjPXaRMA")
+# 1. Sayfa Yapılandırması
+st.set_page_config(page_title="Dijital Evim", page_icon="🤖")
 
+# 2. Güvenli API Anahtarı Tanımlama
+# Streamlit secrets üzerinden anahtarı çekiyoruz
+try:
+    api_key = st.secrets["general"]["API_KEY"]
+    genai.configure(api_key=api_key)
+except Exception as e:
+    st.error("API anahtarı bulunamadı! Lütfen .streamlit/secrets.toml dosyanı kontrol et.")
+    st.stop()
+
+# 3. Model Başlatma
 model = genai.GenerativeModel('gemini-1.5-flash')
 
-# Başlık ve bilgiler
+# 4. Arayüz
 st.title("Dijital Evim")
 st.subheader("Merhaba, ben Perryn!")
 st.caption("Geliştiren: Efekarakaya")
 
-# Hafıza sistemi
+# 5. Hafıza (Session State) Başlatma
+if "chat_session" not in st.session_state:
+    st.session_state.chat_session = model.start_chat(history=[])
+
 if "messages" not in st.session_state:
     st.session_state.messages = []
 
-# Sohbeti göster
+# 6. Geçmişi Ekrana Yazdırma
 for message in st.session_state.messages:
     with st.chat_message(message["role"]):
         st.markdown(message["content"])
 
-# Kullanıcı girişi
+# 7. Kullanıcı Girişi ve Yanıt
 if prompt := st.chat_input("Arkadaşına bir şey söyle..."):
+    # Kullanıcı mesajını kaydet ve göster
     st.session_state.messages.append({"role": "user", "content": prompt})
     with st.chat_message("user"):
         st.markdown(prompt)
 
-    try:
-        response = model.generate_content(prompt)
-        cevap = response.text
-    except Exception as e:
-        cevap = f"Bir hata oluştu: {e}"
-    
+    # Modelden yanıt al
     with st.chat_message("assistant"):
-        st.markdown(cevap)
-    st.session_state.messages.append({"role": "assistant", "content": cevap})
-        
+        with st.spinner("Düşünüyorum..."):
+            try:
+                response = st.session_state.chat_session.send_message(prompt)
+                cevap = response.text
+                st.markdown(cevap)
+                # Asistan yanıtını kaydet
+                st.session_state.messages.append({"role": "assistant", "content": cevap})
+            except Exception as e:
+                st.error(f"Bir hata oluştu: {e}")
+    
