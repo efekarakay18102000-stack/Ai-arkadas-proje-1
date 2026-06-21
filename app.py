@@ -1,5 +1,15 @@
 import streamlit as st
 import google.generativeai as genai
+import os
+
+# Secrets'tan anahtarı al
+api_key = st.secrets["GOOGLE_API_KEY"]
+
+# Anahtarı kütüphaneye tanımla
+genai.configure(api_key=api_key)
+model = genai.GenerativeModel('gemini-1.5-flash')
+import streamlit as st
+import google.generativeai as genai
 
 # Anahtarı kasadan al
 genai.configure(api_key=st.secrets["GOOGLE_API_KEY"])
